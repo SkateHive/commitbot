@@ -103,31 +103,29 @@ export class HiveService {
   }
 
   private generatePermlink(title: string): string {
+    // Use a simple timestamp-based approach to avoid any character issues
     const timestamp = Date.now();
+    const randomSuffix = Math.random().toString(36).substring(2, 8);
     
-    // More aggressive cleaning for Hive permalinks
-    const slug = title
-      .toLowerCase() // Convert to lowercase
-      .normalize('NFD') // Normalize unicode characters
-      .replace(/[\u0300-\u036f]/g, '') // Remove diacritics
-      .replace(/[^a-z0-9\s-]/g, '') // Remove all non-alphanumeric characters except spaces and hyphens
-      .trim() // Remove leading/trailing whitespace
-      .replace(/\s+/g, '-') // Replace spaces with hyphens
-      .replace(/^-+|-+$/g, '') // Remove leading/trailing hyphens
-      .replace(/-+/g, '-') // Replace multiple consecutive hyphens with single hyphen
-      .substring(0, 35); // Shorter length to accommodate timestamp
+    // Create a very clean slug from title
+    const cleanTitle = title
+      .toLowerCase()
+      .replace(/[^a-z0-9]/g, '') // Remove everything except lowercase letters and numbers
+      .substring(0, 20); // Keep it short
     
-    // Fallback if slug is empty after cleaning
-    const finalSlug = slug || 'devlog-update';
+    // Create permlink with only letters, numbers, and single hyphens
+    const permlink = `${cleanTitle || 'devlog'}-${timestamp}-${randomSuffix}`;
     
-    const permlink = `${finalSlug}-${timestamp}`;
+    // Ensure the permlink is valid (only lowercase letters, numbers, and hyphens)
+    const finalPermlink = permlink
+      .toLowerCase()
+      .replace(/[^a-z0-9-]/g, '') // Remove any invalid characters
+      .replace(/--+/g, '-') // Replace multiple hyphens with single
+      .replace(/^-|-$/g, ''); // Remove leading/trailing hyphens
     
-    // Final validation - ensure only lowercase letters, numbers, and hyphens
-    const validatedPermlink = permlink.replace(/[^a-z0-9-]/g, '');
+    console.log(`Generated permlink: "${title}" -> "${finalPermlink}"`);
     
-    console.log(`Generated permlink: "${title}" -> "${validatedPermlink}"`);
-    
-    return validatedPermlink;
+    return finalPermlink;
   }
 
   async validatePostingKey(): Promise<boolean> {
