@@ -25,10 +25,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
     return new OpenAIService(apiKey);
   };
 
-  const getHiveService = () => {
+  const getHiveService = async () => {
     const postingKey = process.env.HIVE_POSTING_KEY || process.env.HIVE_PRIVATE_KEY;
-    const username = process.env.HIVE_USERNAME || 'skatehive.dev';
+    let username = process.env.HIVE_USERNAME;
+    
+    // If no environment variable, load from config
+    if (!username) {
+      const config = await configManager.loadConfig();
+      username = config.hiveUsername;
+    }
+    
     if (!postingKey) throw new Error("Hive posting key not found in environment variables");
+    if (!username) throw new Error("Hive username not configured");
     return new HiveService(postingKey, username);
   };
 
@@ -215,7 +223,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ error: "Blog post not found" });
       }
 
-      const hiveService = getHiveService();
+      const hiveService = await getHiveService();
       const result = await hiveService.publishPost({
         title: post.title,
         content: post.content,
@@ -288,10 +296,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/health", async (req, res) => {
     try {
       const githubService = getGitHubService();
-      const hiveService = getHiveService();
+      const hiveService = await getHiveService();
       
       // Test GitHub connection
-      const githubValid = await githubService.validateRepository('skatehive', 'skatehive-web');
+      const githubValid = await githubService.validateRepository('SkateHive', 'skatehive3.0');
       
       // Test Hive connection
       const hiveValid = await hiveService.validatePostingKey();
