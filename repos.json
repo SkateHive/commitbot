@@ -70,5 +70,11 @@
     "name": "gnars-terminal",
     "description": "Gnars Terminal - DAO interface",
     "isActive": true
+  },
+  {
+    "owner": "Nounspace",
+    "name": "nounspace.ts",
+    "description": "customizable farcaster client",
+    "isActive": true
   }
 ]

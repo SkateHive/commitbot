@@ -106,9 +106,11 @@ export class HiveService {
     const timestamp = Date.now();
     const slug = title
       .toLowerCase()
-      .replace(/[^a-z0-9\s-]/g, '')
-      .replace(/\s+/g, '-')
-      .substring(0, 50);
+      .replace(/[^a-z0-9\s-]/g, '') // Remove all non-alphanumeric characters except spaces and hyphens
+      .replace(/\s+/g, '-') // Replace spaces with hyphens
+      .replace(/^-+|-+$/g, '') // Remove leading/trailing hyphens
+      .replace(/-+/g, '-') // Replace multiple consecutive hyphens with single hyphen
+      .substring(0, 40); // Shorter length to accommodate timestamp
     
     return `${slug}-${timestamp}`;
   }
