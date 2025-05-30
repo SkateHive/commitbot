@@ -94,5 +94,11 @@
     "name": "nounspace.ts",
     "description": "customizable farcaster client",
     "isActive": true
+  },
+  {
+    "owner": "nounspace",
+    "name": "nounspace.ts",
+    "description": "customizable farcaster client",
+    "isActive": true
   }
 ]
