@@ -68,7 +68,11 @@ export class OpenAIService {
     const fromDate = timeRange.from.toLocaleDateString();
     const toDate = timeRange.to.toLocaleDateString();
     
-    let prompt = `Generate a development blog post for the Skatehive community covering commits from ${fromDate} to ${toDate}.\n\n`;
+    // Determine project context from repository names
+    const repoNames = Object.keys(commitsByRepo);
+    const projectContext = this.determineProjectContext(repoNames);
+    
+    let prompt = `Generate a development blog post covering recent development activity from ${fromDate} to ${toDate}.\n\n`;
     
     prompt += "Repository activity:\n\n";
     
@@ -84,29 +88,45 @@ export class OpenAIService {
     });
 
     prompt += `
+${projectContext}
+
 Please generate a JSON response with the following structure:
 {
-  "title": "Engaging title for the blog post (include skateboard emoji 🛹)",
+  "title": "Engaging title for the blog post that reflects the project theme",
   "content": "Full markdown blog post content (800-1200 words) that includes:
     - Introduction highlighting the development period
     - Organized sections by repository or feature type
     - Technical details explained in accessible language
-    - Community impact and benefits
+    - User impact and benefits
     - Bullet points and emojis for readability
     - Call to action for community engagement",
   "summary": "Brief 2-3 sentence summary of key developments",
-  "tags": ["relevant", "tags", "for", "hive", "blockchain"],
+  "tags": ["relevant", "tags", "for", "the", "project"],
   "tokensUsed": 0
 }
 
 Focus on:
-- Skateboarding and web3 culture
+- Project-appropriate tone and terminology
 - Community building aspects
 - Technical achievements made accessible
 - Future roadmap hints
 - Contributor recognition`;
 
     return prompt;
+  }
+
+  private determineProjectContext(repoNames: string[]): string {
+    const allRepos = repoNames.join(' ').toLowerCase();
+    
+    if (allRepos.includes('skate') || allRepos.includes('gnars')) {
+      return `Project Context: This appears to be skateboarding/action sports related software. Use skateboarding metaphors and terminology where appropriate. Include skateboard emoji 🛹 in the title. Focus on skateboarding and web3 culture.`;
+    } else if (allRepos.includes('nounspace') || allRepos.includes('noun')) {
+      return `Project Context: This appears to be web3/DAO related software. Use appropriate blockchain and decentralized technology terminology. Focus on decentralization, community governance, and web3 innovation.`;
+    } else if (allRepos.includes('terminal') || allRepos.includes('cli')) {
+      return `Project Context: This appears to be command-line/developer tooling software. Use appropriate developer tooling terminology. Focus on developer experience and productivity improvements.`;
+    } else {
+      return `Project Context: Analyze the repository names and commit messages to determine the appropriate domain, tone, and terminology for this project. Use relevant emojis and metaphors that match the project's purpose and target audience.`;
+    }
   }
 
   async enhanceContent(content: string, instructions: string): Promise<string> {
