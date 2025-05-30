@@ -1,26 +1,20 @@
 [
   {
-    "owner": "skatehive",
-    "name": "skatehive-web",
-    "description": "Main web application",
+    "owner": "SkateHive",
+    "name": "skatehive3.0",
+    "description": "Skatehive 3.0 - Main web application",
     "isActive": true
   },
   {
-    "owner": "skatehive",
-    "name": "skatehive-api",
-    "description": "Backend API services",
+    "owner": "sktbrd",
+    "name": "gnars-terminal",
+    "description": "Gnars Terminal - DAO interface",
     "isActive": true
   },
   {
-    "owner": "gnars-dao",
-    "name": "gnars-frontend",
-    "description": "Gnars DAO interface",
-    "isActive": true
-  },
-  {
-    "owner": "gnars-dao",
-    "name": "gnars-contracts",
-    "description": "Smart contracts",
+    "owner": "SkateHive",
+    "name": "skatehive3.0",
+    "description": "Skatehive 3.0 - Main web application",
     "isActive": true
   }
 ]

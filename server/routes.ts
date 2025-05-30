@@ -5,7 +5,8 @@ import { GitHubService } from "./lib/github";
 import { OpenAIService } from "./lib/openai";
 import { HiveService } from "./lib/hive";
 import { ConfigManager } from "./lib/config";
-import { insertRepositorySchema, insertBlogPostSchema, type CommitData } from "@shared/schema";
+import { insertRepositorySchema, insertBlogPostSchema } from "@shared/schema";
+import type { CommitData } from "./lib/openai";
 import { z } from "zod";
 
 export async function registerRoutes(app: Express): Promise<Server> {

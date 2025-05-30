@@ -82,6 +82,9 @@ export class MemStorage implements IStorage {
       ...insertRepo,
       id,
       createdAt: new Date(),
+      description: insertRepo.description || null,
+      isActive: insertRepo.isActive ?? true,
+      lastSyncTime: insertRepo.lastSyncTime || null,
     };
     this.repositories.set(id, repository);
     return repository;
@@ -150,7 +153,17 @@ export class MemStorage implements IStorage {
 
   async createCommit(insertCommit: InsertCommit): Promise<Commit> {
     const id = this.currentCommitId++;
-    const commit: Commit = { ...insertCommit, id };
+    const commit: Commit = { 
+      ...insertCommit, 
+      id,
+      repositoryId: insertCommit.repositoryId || null,
+      authorEmail: insertCommit.authorEmail || null,
+      additions: insertCommit.additions || null,
+      deletions: insertCommit.deletions || null,
+      filesChanged: insertCommit.filesChanged || null,
+      url: insertCommit.url || null,
+      processed: insertCommit.processed ?? false,
+    };
     this.commits.set(id, commit);
     return commit;
   }
@@ -188,6 +201,13 @@ export class MemStorage implements IStorage {
       ...insertPost,
       id,
       createdAt: new Date(),
+      status: insertPost.status || "draft",
+      summary: insertPost.summary || null,
+      tags: insertPost.tags || null,
+      hivePostId: insertPost.hivePostId || null,
+      publishedAt: insertPost.publishedAt || null,
+      commitsIncluded: insertPost.commitsIncluded || null,
+      aiTokensUsed: insertPost.aiTokensUsed || null,
     };
     this.blogPosts.set(id, post);
     return post;
@@ -248,7 +268,7 @@ export class MemStorage implements IStorage {
 
   async getCommitsSummary(since: Date): Promise<CommitSummary> {
     const commits = await this.getCommitsSince(since);
-    const repoIds = [...new Set(commits.map(c => c.repositoryId).filter(id => id !== null))];
+    const repoIds = Array.from(new Set(commits.map(c => c.repositoryId).filter(id => id !== null)));
     const repositories: string[] = [];
     
     for (const repoId of repoIds) {
