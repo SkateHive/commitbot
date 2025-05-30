@@ -16,5 +16,11 @@
     "name": "skatehive3.0",
     "description": "Skatehive 3.0 - Main web application",
     "isActive": true
+  },
+  {
+    "owner": "sktbrd",
+    "name": "gnars-terminal",
+    "description": "Gnars Terminal - DAO interface",
+    "isActive": true
   }
 ]
