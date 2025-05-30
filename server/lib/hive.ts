@@ -104,15 +104,30 @@ export class HiveService {
 
   private generatePermlink(title: string): string {
     const timestamp = Date.now();
+    
+    // More aggressive cleaning for Hive permalinks
     const slug = title
-      .toLowerCase()
+      .toLowerCase() // Convert to lowercase
+      .normalize('NFD') // Normalize unicode characters
+      .replace(/[\u0300-\u036f]/g, '') // Remove diacritics
       .replace(/[^a-z0-9\s-]/g, '') // Remove all non-alphanumeric characters except spaces and hyphens
+      .trim() // Remove leading/trailing whitespace
       .replace(/\s+/g, '-') // Replace spaces with hyphens
       .replace(/^-+|-+$/g, '') // Remove leading/trailing hyphens
       .replace(/-+/g, '-') // Replace multiple consecutive hyphens with single hyphen
-      .substring(0, 40); // Shorter length to accommodate timestamp
+      .substring(0, 35); // Shorter length to accommodate timestamp
     
-    return `${slug}-${timestamp}`;
+    // Fallback if slug is empty after cleaning
+    const finalSlug = slug || 'devlog-update';
+    
+    const permlink = `${finalSlug}-${timestamp}`;
+    
+    // Final validation - ensure only lowercase letters, numbers, and hyphens
+    const validatedPermlink = permlink.replace(/[^a-z0-9-]/g, '');
+    
+    console.log(`Generated permlink: "${title}" -> "${validatedPermlink}"`);
+    
+    return validatedPermlink;
   }
 
   async validatePostingKey(): Promise<boolean> {

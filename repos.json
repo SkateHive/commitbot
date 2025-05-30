@@ -82,5 +82,11 @@
     "name": "skatehive3.0",
     "description": "social network owned and operated by skateboarders",
     "isActive": true
+  },
+  {
+    "owner": "nounspace",
+    "name": "nounspace.ts",
+    "description": "customizable farcaster client",
+    "isActive": true
   }
 ]
