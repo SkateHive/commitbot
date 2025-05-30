@@ -1,0 +1,26 @@
+[
+  {
+    "owner": "skatehive",
+    "name": "skatehive-web",
+    "description": "Main web application",
+    "isActive": true
+  },
+  {
+    "owner": "skatehive",
+    "name": "skatehive-api",
+    "description": "Backend API services",
+    "isActive": true
+  },
+  {
+    "owner": "gnars-dao",
+    "name": "gnars-frontend",
+    "description": "Gnars DAO interface",
+    "isActive": true
+  },
+  {
+    "owner": "gnars-dao",
+    "name": "gnars-contracts",
+    "description": "Smart contracts",
+    "isActive": true
+  }
+]
