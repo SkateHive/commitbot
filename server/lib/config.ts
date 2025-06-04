@@ -49,7 +49,10 @@ export class ConfigManager {
   async loadRepositories(): Promise<RepositoryConfig[]> {
     try {
       const data = await fs.readFile(this.reposPath, 'utf-8');
-      return JSON.parse(data);
+      console.log('Loaded raw data:', data); // 👈 check what’s in the file
+      const parsed = JSON.parse(data);
+      console.log('Parsed:', parsed);
+      return parsed;
     } catch (error) {
       console.log('Repos file not found, using defaults');
       return this.getDefaultRepositories();
