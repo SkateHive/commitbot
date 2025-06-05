@@ -8,7 +8,9 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import type { AISummaryResponse } from "@shared/schema";
-import TiptapEditor from "../ui/tiptap-editor";
+import { SimpleEditor } from '@/components/tiptap-templates/simple/simple-editor'
+
+
 
 interface PreviewModalProps {
   isOpen: boolean;
@@ -227,17 +229,14 @@ export default function PreviewModal({ isOpen, onClose, summary }: PreviewModalP
               onClick={toggleTiptapEditor}
               className="bg-blue-600 hover:bg-blue-700 text-white"
             >
-              {isTiptapOpen ? "Close Editor" : "Open Tiptap Editor"}
+              {isTiptapOpen ? "Close Editor" : "Open Editor"}
             </Button>
           </div>
         </div>
 
         {/* Render Tiptap Editor */}
         {isTiptapOpen && (
-          <TiptapEditor 
-            content={editedContent} 
-            onChange={setEditedContent} 
-          />
+          <SimpleEditor content={editedContent} />
         )}
       </DialogContent>
     </Dialog>
