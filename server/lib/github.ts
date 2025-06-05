@@ -43,7 +43,27 @@ export class GitHubService {
         per_page: 100,
       });
 
-      return response.data;
+      // Normalize the response to match GitHubCommit type
+      return response.data.map((commit: any) => ({
+        sha: commit.sha,
+        commit: {
+          message: commit.commit.message,
+          author: {
+            name: commit.commit.author?.name || "",
+            email: commit.commit.author?.email || "",
+            date: commit.commit.author?.date || "",
+          },
+        },
+        html_url: commit.html_url,
+        stats: commit.stats
+          ? {
+              additions: commit.stats.additions ?? 0,
+              deletions: commit.stats.deletions ?? 0,
+              total: commit.stats.total ?? 0,
+            }
+          : undefined,
+        files: commit.files,
+      }));
     } catch (error) {
       console.error(`Error fetching commits for ${owner}/${repo}:`, error);
       throw new Error(`Failed to fetch commits: ${error}`);
@@ -58,7 +78,28 @@ export class GitHubService {
         ref: sha,
       });
 
-      return response.data;
+      const commit = response.data;
+      // Normalize the response to match GitHubCommit type
+      return {
+        sha: commit.sha,
+        commit: {
+          message: commit.commit.message,
+          author: {
+            name: commit.commit.author?.name || "",
+            email: commit.commit.author?.email || "",
+            date: commit.commit.author?.date || "",
+          },
+        },
+        html_url: commit.html_url,
+        stats: commit.stats
+          ? {
+              additions: commit.stats.additions ?? 0,
+              deletions: commit.stats.deletions ?? 0,
+              total: commit.stats.total ?? 0,
+            }
+          : undefined,
+        files: commit.files,
+      };
     } catch (error) {
       console.error(`Error fetching commit details for ${sha}:`, error);
       throw new Error(`Failed to fetch commit details: ${error}`);
