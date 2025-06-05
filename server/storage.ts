@@ -1,4 +1,4 @@
-import { repositories, commits, blogPosts, botConfig, type Repository, type InsertRepository, type Commit, type InsertCommit, type BlogPost, type InsertBlogPost, type BotConfig, type InsertBotConfig, type DashboardStats, type RecentCommitWithRepo, type CommitSummary, type RepositoryConfig } from "@shared/schema";
+import { repositories, commits, blogPosts, botConfig, type Repository, type InsertRepository, type Commit, type InsertCommit, type BlogPost, type InsertBlogPost, type BotConfig, type InsertBotConfig, type DashboardStats, type RecentCommitWithRepo, type CommitSummary } from "@shared/schema";
 
 export interface IStorage {
   // Repository methods
