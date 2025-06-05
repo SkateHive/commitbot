@@ -1,10 +1,10 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
+import { ConfigManager } from "./lib/config";
 import { storage } from "./storage";
 import { GitHubService } from "./lib/github";
 import { OpenAIService } from "./lib/openai";
 import { HiveService } from "./lib/hive";
-import { ConfigManager } from "./lib/config";
 import { insertRepositorySchema, insertBlogPostSchema } from "@shared/schema";
 import type { CommitData } from "./lib/openai";
 import { z } from "zod";

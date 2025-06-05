@@ -9,6 +9,8 @@ import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import type { AISummaryResponse } from "@shared/schema";
 
+
+
 interface PreviewModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -99,7 +101,7 @@ export default function PreviewModal({ isOpen, onClose, summary }: PreviewModalP
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
+      <DialogContent className="max-w-full max-h-[90vh] overflow-hidden flex flex-col">
         <DialogHeader>
           <DialogTitle className="flex items-center justify-between">
             <span>Blog Post Preview</span>
@@ -110,70 +112,70 @@ export default function PreviewModal({ isOpen, onClose, summary }: PreviewModalP
           </DialogTitle>
         </DialogHeader>
 
-        <div className="flex-1 overflow-hidden flex gap-6">
-          {/* Editor Panel */}
-          <div className="w-1/2 flex flex-col space-y-4">
-            <div>
-              <label className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 block">Title</label>
-              <Input
-                value={editedTitle}
-                onChange={(e) => setEditedTitle(e.target.value)}
-                placeholder="Post title..."
-                className="font-medium"
-              />
-            </div>
+          <div className="flex-1 overflow-hidden flex gap-6">
+            {/* Editor Panel */}
+            <div className="w-1/2 flex flex-col space-y-4">
+              <div>
+                <label className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 block">Title</label>
+                <Input
+                  value={editedTitle}
+                  onChange={(e) => setEditedTitle(e.target.value)}
+                  placeholder="Post title..."
+                  className="font-medium"
+                />
+              </div>
 
-            <div>
-              <label className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 block">Tags</label>
-              <Input
-                value={editedTags}
-                onChange={(e) => setEditedTags(e.target.value)}
-                placeholder="skatehive, development, web3"
-                className="font-mono text-sm"
-              />
-            </div>
+              <div>
+                <label className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 block">Tags</label>
+                <Input
+                  value={editedTags}
+                  onChange={(e) => setEditedTags(e.target.value)}
+                  placeholder="skatehive, development, web3"
+                  className="font-mono text-sm"
+                />
+              </div>
 
-            <div className="flex-1 flex flex-col">
-              <label className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 block">Content (Markdown)</label>
-              <Textarea
-                value={editedContent}
-                onChange={(e) => setEditedContent(e.target.value)}
-                className="flex-1 resize-none font-mono text-sm"
-                placeholder="Blog post content in markdown..."
-              />
-            </div>
-          </div>
-
-          {/* Preview Panel */}
-          <div className="w-1/2 flex flex-col">
-            <label className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 block">Live Preview</label>
-            <div className="flex-1 border border-gray-200 dark:border-gray-700 rounded-lg p-4 overflow-auto bg-white dark:bg-gray-800">
-              <div className="prose prose-sm max-w-none dark:prose-invert">
-                <h1 className="text-xl font-bold mb-4">{editedTitle}</h1>
-                <div className="mb-4">
-                  {editedTags.split(",").map(tag => tag.trim()).filter(Boolean).map(tag => (
-                    <Badge key={tag} variant="secondary" className="mr-2 mb-2">
-                      #{tag}
-                    </Badge>
-                  ))}
-                </div>
-                <div 
-                  className="prose-content"
-                  dangerouslySetInnerHTML={{ 
-                    __html: editedContent
-                      .replace(/\n/g, '<br>')
-                      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-                      .replace(/\*(.*?)\*/g, '<em>$1</em>')
-                      .replace(/^#{1}\s+(.*$)/gim, '<h1>$1</h1>')
-                      .replace(/^#{2}\s+(.*$)/gim, '<h2>$1</h2>')
-                      .replace(/^#{3}\s+(.*$)/gim, '<h3>$1</h3>')
-                      .replace(/^-\s+(.*$)/gim, '<ul><li>$1</li></ul>')
-                  }}
+              <div className="flex-1 flex flex-col">
+                <label className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 block">Content (Markdown)</label>
+                <Textarea
+                  value={editedContent}
+                  onChange={(e) => setEditedContent(e.target.value)}
+                  className="flex-1 resize-none font-mono text-sm"
+                  placeholder="Blog post content in markdown..."
                 />
               </div>
             </div>
+
+            {/* Preview Panel */}
+            <div className="w-1/2 flex flex-col">
+              <label className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 block">Live Preview</label>
+              <div className="flex-1 border border-gray-200 dark:border-gray-700 rounded-lg p-4 overflow-auto bg-white dark:bg-gray-800">
+                <div className="prose prose-sm max-w-none dark:prose-invert">
+                  <h1 className="text-xl font-bold mb-4">{editedTitle}</h1>
+                  <div className="mb-4">
+                    {editedTags.split(",").map(tag => tag.trim()).filter(Boolean).map(tag => (
+                      <Badge key={tag} variant="secondary" className="mr-2 mb-2">
+                        #{tag}
+                      </Badge>
+                    ))}
+                  </div>
+                  <div
+                    className="prose-content"
+                    dangerouslySetInnerHTML={{
+                      __html: editedContent
+                        .replace(/\n/g, '<br>')
+                        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                        .replace(/\*(.*?)\*/g, '<em>$1</em>')
+                        .replace(/^#{1}\s+(.*$)/gim, '<h1>$1</h1>')
+                        .replace(/^#{2}\s+(.*$)/gim, '<h2>$1</h2>')
+                        .replace(/^#{3}\s+(.*$)/gim, '<h3>$1</h3>')
+                        .replace(/^-\s+(.*$)/gim, '<ul><li>$1</li></ul>')
+                    }}
+                  />
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
 
         {/* Footer Actions */}
         <div className="flex items-center justify-between pt-4 border-t border-gray-200 dark:border-gray-700">
@@ -182,8 +184,8 @@ export default function PreviewModal({ isOpen, onClose, summary }: PreviewModalP
             <span>Estimated read time: {Math.ceil(editedContent.split(/\s+/).length / 200)} min</span>
           </div>
           <div className="flex items-center space-x-3">
-            <Button 
-              variant="outline" 
+            <Button
+              variant="outline"
               onClick={handleSaveDraft}
               disabled={createPostMutation.isPending}
             >
@@ -199,7 +201,7 @@ export default function PreviewModal({ isOpen, onClose, summary }: PreviewModalP
                 </>
               )}
             </Button>
-            <Button 
+            <Button
               onClick={handlePublish}
               disabled={publishMutation.isPending}
               className="bg-green-600 hover:bg-green-700 text-white"

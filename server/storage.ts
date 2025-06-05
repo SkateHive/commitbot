@@ -10,6 +10,18 @@ export interface IStorage {
   updateRepository(id: number, repository: Partial<InsertRepository>): Promise<Repository | undefined>;
   deleteRepository(id: number): Promise<boolean>;
 
+  // Add the setRepositories method here
+  setRepositories(repos: InsertRepository[]): Promise<void>;
+
+  // Repository methods
+  getRepositories(): Promise<Repository[]>;
+  getActiveRepositories(): Promise<Repository[]>;
+  getRepository(id: number): Promise<Repository | undefined>;
+  getRepositoryByName(owner: string, name: string): Promise<Repository | undefined>;
+  createRepository(repository: InsertRepository): Promise<Repository>;
+  updateRepository(id: number, repository: Partial<InsertRepository>): Promise<Repository | undefined>;
+  deleteRepository(id: number): Promise<boolean>;
+
   // Commit methods
   getCommits(repositoryId?: number, limit?: number): Promise<Commit[]>;
   getUnprocessedCommits(): Promise<Commit[]>;
@@ -99,23 +111,29 @@ export class MemStorage implements IStorage {
     return updated;
   }
 
+  async setRepositories(repos: InsertRepository[]): Promise<void> {
+    for (const repo of repos) {
+      await this.createRepository(repo);
+    }
+  }
+
   async deleteRepository(id: number): Promise<boolean> {
     return this.repositories.delete(id);
   }
 
   async getCommits(repositoryId?: number, limit?: number): Promise<Commit[]> {
     let commits = Array.from(this.commits.values());
-    
+
     if (repositoryId) {
       commits = commits.filter(commit => commit.repositoryId === repositoryId);
     }
-    
+
     commits.sort((a, b) => b.date.getTime() - a.date.getTime());
-    
+
     if (limit) {
       commits = commits.slice(0, limit);
     }
-    
+
     return commits;
   }
 
@@ -129,32 +147,32 @@ export class MemStorage implements IStorage {
 
   async getCommitsSince(since: Date, repositoryId?: number): Promise<Commit[]> {
     let commits = Array.from(this.commits.values()).filter(commit => commit.date >= since);
-    
+
     if (repositoryId) {
       commits = commits.filter(commit => commit.repositoryId === repositoryId);
     }
-    
+
     return commits.sort((a, b) => b.date.getTime() - a.date.getTime());
   }
 
   async getRecentCommitsWithRepo(limit = 10): Promise<RecentCommitWithRepo[]> {
     const commits = await this.getCommits(undefined, limit);
     const result: RecentCommitWithRepo[] = [];
-    
+
     for (const commit of commits) {
       const repository = await this.getRepository(commit.repositoryId!);
       if (repository) {
         result.push({ ...commit, repository });
       }
     }
-    
+
     return result;
   }
 
   async createCommit(insertCommit: InsertCommit): Promise<Commit> {
     const id = this.currentCommitId++;
-    const commit: Commit = { 
-      ...insertCommit, 
+    const commit: Commit = {
+      ...insertCommit,
       id,
       repositoryId: insertCommit.repositoryId || null,
       authorEmail: insertCommit.authorEmail || null,
@@ -250,12 +268,12 @@ export class MemStorage implements IStorage {
     const activeRepos = await this.getActiveRepositories();
     const allCommits = await this.getCommits();
     const allPosts = await this.getBlogPosts();
-    
+
     const now = new Date();
     const lastWeek = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
     const newCommits = allCommits.filter(commit => commit.date >= lastWeek);
     const publishedPosts = allPosts.filter(post => post.status === 'published');
-    
+
     const aiUsage = allPosts.reduce((sum, post) => sum + (post.aiTokensUsed || 0), 0);
 
     return {
@@ -270,7 +288,7 @@ export class MemStorage implements IStorage {
     const commits = await this.getCommitsSince(since);
     const repoIds = Array.from(new Set(commits.map(c => c.repositoryId).filter(id => id !== null)));
     const repositories: string[] = [];
-    
+
     for (const repoId of repoIds) {
       const repo = await this.getRepository(repoId!);
       if (repo) {
