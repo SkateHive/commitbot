@@ -1,5 +1,10 @@
 import { useState, useEffect } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
@@ -8,8 +13,9 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import type { AISummaryResponse } from "@shared/schema";
-
-
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import rehypeRaw from "rehype-raw";
 
 interface PreviewModalProps {
   isOpen: boolean;
@@ -17,7 +23,11 @@ interface PreviewModalProps {
   summary: AISummaryResponse | null;
 }
 
-export default function PreviewModal({ isOpen, onClose, summary }: PreviewModalProps) {
+export default function PreviewModal({
+  isOpen,
+  onClose,
+  summary,
+}: PreviewModalProps) {
   const [editedTitle, setEditedTitle] = useState("");
   const [editedContent, setEditedContent] = useState("");
   const [editedTags, setEditedTags] = useState("");
@@ -34,7 +44,8 @@ export default function PreviewModal({ isOpen, onClose, summary }: PreviewModalP
   }, [summary]);
 
   const createPostMutation = useMutation({
-    mutationFn: (postData: any) => apiRequest("POST", "/api/blog-posts", postData),
+    mutationFn: (postData: any) =>
+      apiRequest("POST", "/api/blog-posts", postData),
     onSuccess: async (response) => {
       const post = await response.json();
       toast({
@@ -48,7 +59,11 @@ export default function PreviewModal({ isOpen, onClose, summary }: PreviewModalP
 
   const publishMutation = useMutation({
     mutationFn: async (postData: any) => {
-      const createResponse = await apiRequest("POST", "/api/blog-posts", postData);
+      const createResponse = await apiRequest(
+        "POST",
+        "/api/blog-posts",
+        postData
+      );
       const post = await createResponse.json();
       return apiRequest("POST", `/api/publish/${post.id}`);
     },
@@ -76,7 +91,10 @@ export default function PreviewModal({ isOpen, onClose, summary }: PreviewModalP
       title: editedTitle,
       content: editedContent,
       summary: summary?.summary || "",
-      tags: editedTags.split(",").map(tag => tag.trim()).filter(Boolean),
+      tags: editedTags
+        .split(",")
+        .map((tag) => tag.trim())
+        .filter(Boolean),
       status: "draft",
       aiTokensUsed: summary?.tokensUsed || 0,
     };
@@ -89,7 +107,10 @@ export default function PreviewModal({ isOpen, onClose, summary }: PreviewModalP
       title: editedTitle,
       content: editedContent,
       summary: summary?.summary || "",
-      tags: editedTags.split(",").map(tag => tag.trim()).filter(Boolean),
+      tags: editedTags
+        .split(",")
+        .map((tag) => tag.trim())
+        .filter(Boolean),
       status: "published",
       aiTokensUsed: summary?.tokensUsed || 0,
     };
@@ -112,76 +133,90 @@ export default function PreviewModal({ isOpen, onClose, summary }: PreviewModalP
           </DialogTitle>
         </DialogHeader>
 
-          <div className="flex-1 overflow-hidden flex gap-6">
-            {/* Editor Panel */}
-            <div className="w-1/2 flex flex-col space-y-4">
-              <div>
-                <label className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 block">Title</label>
-                <Input
-                  value={editedTitle}
-                  onChange={(e) => setEditedTitle(e.target.value)}
-                  placeholder="Post title..."
-                  className="font-medium"
-                />
-              </div>
-
-              <div>
-                <label className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 block">Tags</label>
-                <Input
-                  value={editedTags}
-                  onChange={(e) => setEditedTags(e.target.value)}
-                  placeholder="skatehive, development, web3"
-                  className="font-mono text-sm"
-                />
-              </div>
-
-              <div className="flex-1 flex flex-col">
-                <label className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 block">Content (Markdown)</label>
-                <Textarea
-                  value={editedContent}
-                  onChange={(e) => setEditedContent(e.target.value)}
-                  className="flex-1 resize-none font-mono text-sm"
-                  placeholder="Blog post content in markdown..."
-                />
-              </div>
+        <div className="flex-1 overflow-hidden flex gap-6">
+          {/* Editor Panel */}
+          <div className="w-1/2 flex flex-col space-y-4">
+            <div>
+              <label className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 block">
+                Title
+              </label>
+              <Input
+                value={editedTitle}
+                onChange={(e) => setEditedTitle(e.target.value)}
+                placeholder="Post title..."
+                className="font-medium"
+              />
             </div>
 
-            {/* Preview Panel */}
-            <div className="w-1/2 flex flex-col">
-              <label className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 block">Live Preview</label>
-              <div className="flex-1 border border-gray-200 dark:border-gray-700 rounded-lg p-4 overflow-auto bg-white dark:bg-gray-800">
-                <div className="prose prose-sm max-w-none dark:prose-invert">
-                  <h1 className="text-xl font-bold mb-4">{editedTitle}</h1>
-                  <div className="mb-4">
-                    {editedTags.split(",").map(tag => tag.trim()).filter(Boolean).map(tag => (
-                      <Badge key={tag} variant="secondary" className="mr-2 mb-2">
+            <div>
+              <label className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 block">
+                Tags
+              </label>
+              <Input
+                value={editedTags}
+                onChange={(e) => setEditedTags(e.target.value)}
+                placeholder="skatehive, development, web3"
+                className="font-mono text-sm"
+              />
+            </div>
+
+            <div className="flex-1 flex flex-col">
+              <label className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 block">
+                Content (Markdown)
+              </label>
+              <Textarea
+                value={editedContent}
+                onChange={(e) => setEditedContent(e.target.value)}
+                className="flex-1 resize-none font-mono text-sm"
+                placeholder="Blog post content in markdown..."
+              />
+            </div>
+          </div>
+
+          {/* Preview Panel */}
+          <div className="w-1/2 flex flex-col">
+            <label className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 block">
+              Live Preview
+            </label>
+            <div className="flex-1 border border-gray-200 dark:border-gray-700 rounded-lg p-4 overflow-auto bg-white dark:bg-gray-800">
+              <div className="prose prose-sm max-w-none dark:prose-invert">
+                <h1 className="text-xl font-bold mb-4">{editedTitle}</h1>
+                <div className="mb-4">
+                  {editedTags
+                    .split(",")
+                    .map((tag) => tag.trim())
+                    .filter(Boolean)
+                    .map((tag) => (
+                      <Badge
+                        key={tag}
+                        variant="secondary"
+                        className="mr-2 mb-2"
+                      >
                         #{tag}
                       </Badge>
                     ))}
-                  </div>
-                  <div
-                    className="prose-content"
-                    dangerouslySetInnerHTML={{
-                      __html: editedContent
-                        .replace(/\n/g, '<br>')
-                        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-                        .replace(/\*(.*?)\*/g, '<em>$1</em>')
-                        .replace(/^#{1}\s+(.*$)/gim, '<h1>$1</h1>')
-                        .replace(/^#{2}\s+(.*$)/gim, '<h2>$1</h2>')
-                        .replace(/^#{3}\s+(.*$)/gim, '<h3>$1</h3>')
-                        .replace(/^-\s+(.*$)/gim, '<ul><li>$1</li></ul>')
-                    }}
-                  />
+                </div>
+                <div className="prose-content">
+                  <ReactMarkdown
+                    remarkPlugins={[remarkGfm]}
+                    rehypePlugins={[rehypeRaw]}
+                  >
+                    {editedContent}
+                  </ReactMarkdown>
                 </div>
               </div>
             </div>
           </div>
+        </div>
 
         {/* Footer Actions */}
         <div className="flex items-center justify-between pt-4 border-t border-gray-200 dark:border-gray-700">
           <div className="flex items-center space-x-4 text-sm text-gray-600 dark:text-gray-400">
             <span>Word count: {editedContent.split(/\s+/).length}</span>
-            <span>Estimated read time: {Math.ceil(editedContent.split(/\s+/).length / 200)} min</span>
+            <span>
+              Estimated read time:{" "}
+              {Math.ceil(editedContent.split(/\s+/).length / 200)} min
+            </span>
           </div>
           <div className="flex items-center space-x-3">
             <Button
