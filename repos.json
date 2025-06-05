@@ -12,93 +12,9 @@
     "isActive": true
   },
   {
-    "owner": "SkateHive",
-    "name": "skatehive3.0",
-    "description": "Skatehive 3.0 - Main web application",
-    "isActive": true
-  },
-  {
-    "owner": "sktbrd",
-    "name": "gnars-terminal",
-    "description": "Gnars Terminal - DAO interface",
-    "isActive": true
-  },
-  {
-    "owner": "SkateHive",
-    "name": "skatehive3.0",
-    "description": "Skatehive 3.0 - Main web application",
-    "isActive": true
-  },
-  {
-    "owner": "sktbrd",
-    "name": "gnars-terminal",
-    "description": "Gnars Terminal - DAO interface",
-    "isActive": true
-  },
-  {
-    "owner": "SkateHive",
+    "owner": "Skatehive",
     "name": "skatehive3.0",
     "description": "",
-    "isActive": true
-  },
-  {
-    "owner": "SkateHive",
-    "name": "skatehive3.0",
-    "description": "Skatehive 3.0 - Main web application",
-    "isActive": true
-  },
-  {
-    "owner": "sktbrd",
-    "name": "gnars-terminal",
-    "description": "Gnars Terminal - DAO interface",
-    "isActive": true
-  },
-  {
-    "owner": "SkateHive",
-    "name": "skatehive3.0",
-    "description": "shred",
-    "isActive": true
-  },
-  {
-    "owner": "SkateHive",
-    "name": "skatehive3.0",
-    "description": "Skatehive 3.0 - Main web application",
-    "isActive": true
-  },
-  {
-    "owner": "sktbrd",
-    "name": "gnars-terminal",
-    "description": "Gnars Terminal - DAO interface",
-    "isActive": true
-  },
-  {
-    "owner": "Nounspace",
-    "name": "nounspace.ts",
-    "description": "customizable farcaster client",
-    "isActive": true
-  },
-  {
-    "owner": "SkateHive",
-    "name": "skatehive3.0",
-    "description": "social network owned and operated by skateboarders",
-    "isActive": true
-  },
-  {
-    "owner": "nounspace",
-    "name": "nounspace.ts",
-    "description": "customizable farcaster client",
-    "isActive": true
-  },
-  {
-    "owner": "nounspace",
-    "name": "nounspace.ts",
-    "description": "customizable farcaster client",
-    "isActive": true
-  },
-  {
-    "owner": "nounspace",
-    "name": "nounspace.ts",
-    "description": "customizable farcaster client",
     "isActive": true
   }
 ]

@@ -8,6 +8,8 @@ import { ConfigManager } from "./lib/config";
 import { insertRepositorySchema, insertBlogPostSchema } from "@shared/schema";
 import type { CommitData } from "./lib/openai";
 import { z } from "zod";
+import 'dotenv/config'; // Top of your Node file (e.g., server.js or a Vite plugin)
+
 
 export async function registerRoutes(app: Express): Promise<Server> {
   const configManager = new ConfigManager();
