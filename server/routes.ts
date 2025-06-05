@@ -80,7 +80,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       repos.push({
         owner: repoData.owner,
         name: repoData.name,
-        description: repoData.description,
+        description: repoData.description ?? undefined,
         isActive: repoData.isActive ?? true,
       });
       await configManager.saveRepositories(repos);
