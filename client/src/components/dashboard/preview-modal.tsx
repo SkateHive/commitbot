@@ -8,6 +8,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import type { AISummaryResponse } from "@shared/schema";
+import TiptapEditor from "../ui/tiptap-editor";
 
 interface PreviewModalProps {
   isOpen: boolean;
@@ -19,6 +20,7 @@ export default function PreviewModal({ isOpen, onClose, summary }: PreviewModalP
   const [editedTitle, setEditedTitle] = useState("");
   const [editedContent, setEditedContent] = useState("");
   const [editedTags, setEditedTags] = useState("");
+  const [isTiptapOpen, setIsTiptapOpen] = useState(false); // New state for Tiptap editor
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
@@ -93,6 +95,10 @@ export default function PreviewModal({ isOpen, onClose, summary }: PreviewModalP
     };
 
     publishMutation.mutate(postData);
+  };
+
+  const toggleTiptapEditor = () => {
+    setIsTiptapOpen(prev => !prev);
   };
 
   if (!summary) return null;
@@ -216,8 +222,23 @@ export default function PreviewModal({ isOpen, onClose, summary }: PreviewModalP
                 </>
               )}
             </Button>
+            <Button 
+              variant="outline" 
+              onClick={toggleTiptapEditor}
+              className="bg-blue-600 hover:bg-blue-700 text-white"
+            >
+              {isTiptapOpen ? "Close Editor" : "Open Tiptap Editor"}
+            </Button>
           </div>
         </div>
+
+        {/* Render Tiptap Editor */}
+        {isTiptapOpen && (
+          <TiptapEditor 
+            content={editedContent} 
+            onChange={setEditedContent} 
+          />
+        )}
       </DialogContent>
     </Dialog>
   );
