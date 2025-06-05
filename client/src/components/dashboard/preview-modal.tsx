@@ -8,8 +8,6 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import type { AISummaryResponse } from "@shared/schema";
-import { SimpleEditor } from '@/components/tiptap-templates/simple/simple-editor'
-import { useCurrentEditor, useEditor } from "@tiptap/react";
 
 
 
@@ -23,7 +21,6 @@ export default function PreviewModal({ isOpen, onClose, summary }: PreviewModalP
   const [editedTitle, setEditedTitle] = useState("");
   const [editedContent, setEditedContent] = useState("");
   const [editedTags, setEditedTags] = useState("");
-  const [isTiptapOpen, setIsTiptapOpen] = useState(false); // New state for Tiptap editor
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
@@ -100,10 +97,6 @@ export default function PreviewModal({ isOpen, onClose, summary }: PreviewModalP
     publishMutation.mutate(postData);
   };
 
-  const toggleTiptapEditor = () => {
-    setIsTiptapOpen(prev => !prev);
-  };
-
   if (!summary) return null;
 
   return (
@@ -119,7 +112,6 @@ export default function PreviewModal({ isOpen, onClose, summary }: PreviewModalP
           </DialogTitle>
         </DialogHeader>
 
-        {!isTiptapOpen && (
           <div className="flex-1 overflow-hidden flex gap-6">
             {/* Editor Panel */}
             <div className="w-1/2 flex flex-col space-y-4">
@@ -184,7 +176,6 @@ export default function PreviewModal({ isOpen, onClose, summary }: PreviewModalP
               </div>
             </div>
           </div>
-        )}
 
         {/* Footer Actions */}
         <div className="flex items-center justify-between pt-4 border-t border-gray-200 dark:border-gray-700">
@@ -227,26 +218,8 @@ export default function PreviewModal({ isOpen, onClose, summary }: PreviewModalP
                 </>
               )}
             </Button>
-            <Button
-              variant="outline"
-              onClick={toggleTiptapEditor}
-              className="bg-blue-600 hover:bg-blue-700 text-white"
-            >
-              {isTiptapOpen ? "Close Editor" : "Open Editor"}
-            </Button>
           </div>
         </div>
-        
-
-        {/* Render Tiptap Editor */}
-        {isTiptapOpen && (
-          <>
-            <SimpleEditor 
-              content={editedContent} 
-              // editor={useEditor}
-            />
-          </>
-        )}
       </DialogContent>
     </Dialog>
   );
