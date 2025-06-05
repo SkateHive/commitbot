@@ -6,7 +6,13 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import Sidebar from "@/components/dashboard/sidebar";
@@ -28,7 +34,8 @@ export default function Repositories() {
   });
 
   const addRepoMutation = useMutation({
-    mutationFn: (repoData: any) => apiRequest("POST", "/api/repositories", repoData),
+    mutationFn: (repoData: any) =>
+      apiRequest("POST", "/api/repositories", repoData),
     onSuccess: async () => {
       toast({
         title: "Repository Added",
@@ -62,27 +69,32 @@ export default function Repositories() {
 
   const formatTimeAgo = (date: Date | string | null) => {
     if (!date) return "Never";
-    
+
     const now = new Date();
     const syncDate = new Date(date);
     const diffMs = now.getTime() - syncDate.getTime();
     const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
     const diffDays = Math.floor(diffHours / 24);
 
-    if (diffDays > 0) return `${diffDays} day${diffDays > 1 ? 's' : ''} ago`;
-    if (diffHours > 0) return `${diffHours} hour${diffHours > 1 ? 's' : ''} ago`;
-    return 'Just now';
+    if (diffDays > 0) return `${diffDays} day${diffDays > 1 ? "s" : ""} ago`;
+    if (diffHours > 0)
+      return `${diffHours} hour${diffHours > 1 ? "s" : ""} ago`;
+    return "Just now";
   };
 
   return (
     <div className="min-h-screen flex bg-gray-50 dark:bg-gray-900">
       <Sidebar />
-      
+
       <main className="flex-1 flex flex-col overflow-hidden">
         <header className="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700 px-6 py-4 flex items-center justify-between">
           <div>
-            <h2 className="text-2xl font-semibold text-gray-900 dark:text-white">Repositories</h2>
-            <p className="text-sm text-gray-500 dark:text-gray-400">Manage GitHub repositories for commit monitoring</p>
+            <h2 className="text-2xl font-semibold text-gray-900 dark:text-white">
+              Repositories
+            </h2>
+            <p className="text-sm text-gray-500 dark:text-gray-400">
+              Manage GitHub repositories for commit monitoring
+            </p>
           </div>
           <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
             <DialogTrigger asChild>
@@ -103,7 +115,9 @@ export default function Repositories() {
                     </label>
                     <Input
                       value={newRepo.owner}
-                      onChange={(e) => setNewRepo({ ...newRepo, owner: e.target.value })}
+                      onChange={(e) =>
+                        setNewRepo({ ...newRepo, owner: e.target.value })
+                      }
                       placeholder="SkateHive"
                     />
                   </div>
@@ -113,7 +127,9 @@ export default function Repositories() {
                     </label>
                     <Input
                       value={newRepo.name}
-                      onChange={(e) => setNewRepo({ ...newRepo, name: e.target.value })}
+                      onChange={(e) =>
+                        setNewRepo({ ...newRepo, name: e.target.value })
+                      }
                       placeholder="skatehive3.0"
                     />
                   </div>
@@ -124,7 +140,9 @@ export default function Repositories() {
                   </label>
                   <Textarea
                     value={newRepo.description}
-                    onChange={(e) => setNewRepo({ ...newRepo, description: e.target.value })}
+                    onChange={(e) =>
+                      setNewRepo({ ...newRepo, description: e.target.value })
+                    }
                     placeholder="Brief description of the repository"
                     className="resize-none"
                     rows={3}
@@ -133,7 +151,9 @@ export default function Repositories() {
                 <div className="flex items-center space-x-2">
                   <Switch
                     checked={newRepo.isActive}
-                    onCheckedChange={(checked) => setNewRepo({ ...newRepo, isActive: checked })}
+                    onCheckedChange={(checked) =>
+                      setNewRepo({ ...newRepo, isActive: checked })
+                    }
                   />
                   <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
                     Active monitoring
@@ -168,13 +188,18 @@ export default function Repositories() {
         <div className="flex-1 overflow-auto p-6">
           <Card className="bg-white dark:bg-gray-800">
             <CardHeader>
-              <CardTitle className="text-gray-900 dark:text-white">Monitored Repositories</CardTitle>
+              <CardTitle className="text-gray-900 dark:text-white">
+                Monitored Repositories
+              </CardTitle>
             </CardHeader>
             <CardContent>
               {isLoading ? (
                 <div className="animate-pulse space-y-4">
                   {[...Array(3)].map((_, i) => (
-                    <div key={i} className="h-20 bg-gray-200 dark:bg-gray-700 rounded"></div>
+                    <div
+                      key={i}
+                      className="h-20 bg-gray-200 dark:bg-gray-700 rounded"
+                    ></div>
                   ))}
                 </div>
               ) : repositories && repositories.length > 0 ? (
@@ -198,7 +223,10 @@ export default function Repositories() {
                     </thead>
                     <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                       {repositories.map((repo) => (
-                        <tr key={repo.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
+                        <tr
+                          key={repo.id}
+                          className="hover:bg-gray-50 dark:hover:bg-gray-700"
+                        >
                           <td className="px-6 py-4 whitespace-nowrap">
                             <div className="flex items-center">
                               <div className="flex-shrink-0 h-10 w-10 bg-gray-100 dark:bg-gray-600 rounded-lg flex items-center justify-center">
@@ -218,17 +246,33 @@ export default function Repositories() {
                             {formatTimeAgo(repo.lastSyncTime)}
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap">
-                            <Badge variant={repo.isActive ? "default" : "secondary"}>
+                            <Badge
+                              variant={repo.isActive ? "default" : "secondary"}
+                            >
                               {repo.isActive ? "Active" : "Inactive"}
                             </Badge>
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                             <div className="flex items-center space-x-2">
-                              <Button variant="ghost" size="sm" className="text-blue-600 hover:text-blue-700">
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                className="text-blue-600 hover:text-blue-700"
+                                onClick={() =>
+                                  window.open(
+                                    `https://github.com/${repo.owner}/${repo.name}`,
+                                    "_blank"
+                                  )
+                                }
+                              >
                                 <i className="fas fa-external-link-alt mr-1"></i>
                                 View on GitHub
                               </Button>
-                              <Button variant="ghost" size="sm" className="text-gray-600 hover:text-gray-700">
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                className="text-gray-600 hover:text-gray-700"
+                              >
                                 <i className="fas fa-cog mr-1"></i>
                                 Settings
                               </Button>
