@@ -107,7 +107,7 @@ export default function PreviewModal({ isOpen, onClose, summary }: PreviewModalP
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
+      <DialogContent className="max-w-full max-h-[90vh] overflow-hidden flex flex-col">
         <DialogHeader>
           <DialogTitle className="flex items-center justify-between">
             <span>Blog Post Preview</span>
@@ -236,7 +236,12 @@ export default function PreviewModal({ isOpen, onClose, summary }: PreviewModalP
 
         {/* Render Tiptap Editor */}
         {isTiptapOpen && (
+          <>
           <SimpleEditor content={editedContent} />
+          <Button onClick={() => setIsTiptapOpen(false)} className="absolute top-4 right-4">
+            Close Editor
+          </Button>
+          </>
         )}
       </DialogContent>
     </Dialog>
