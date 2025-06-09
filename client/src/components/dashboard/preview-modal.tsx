@@ -118,6 +118,33 @@ export default function PreviewModal({
     publishMutation.mutate(postData);
   };
 
+  const handleEnhanceContent = async () => {
+    const instructions = window.prompt("Please enter instructions for enhancement:");
+    if (!instructions) return; // Exit if no instructions are provided
+
+    try {
+      const response = await fetch("/api/enhance-content", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          content: editedContent,
+          instructions: instructions,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to enhance content");
+      }
+
+      const data = await response.json();
+      setEditedContent(data.content); // Update the editor with the enhanced content
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   if (!summary) return null;
 
   return (
@@ -252,6 +279,13 @@ export default function PreviewModal({
                   Publish to Hive
                 </>
               )}
+            </Button>
+            <Button
+              onClick={handleEnhanceContent}
+              disabled={createPostMutation.isPending || publishMutation.isPending}
+              className="bg-blue-600 hover:bg-blue-700 text-white"
+            >
+              Enhance Content
             </Button>
           </div>
         </div>
