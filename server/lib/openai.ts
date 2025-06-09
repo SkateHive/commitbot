@@ -38,6 +38,9 @@ Generate engaging blog posts that highlight development progress in a way that's
 - Title format: "Skatehive Devs Report: month/year"
 - Always refer to the project as Skatehive (never include versions)
 - Never use emojis
+- Leave placeholders for code updates that can be represented visually with a screenshot or diagram , in this format: ![code update screenshot](URL)
+- Divide the post into sections by repository mentioning and linking to the repository
+- Always credit the devs for their work, using their Skatehive usernames (Vlad 2 = xvlad, rferrari = vaipraonde ) 
 - Always respond with valid JSON with the following fields:
   - title: string
   - content: string (the full blog post)

@@ -1,4 +1,4 @@
-import type { Express } from "express";
+import type { Express, Request } from "express";
 import { createServer, type Server } from "http";
 import { ConfigManager } from "./lib/config";
 import { storage } from "./storage";
@@ -9,6 +9,9 @@ import { insertRepositorySchema, insertBlogPostSchema } from "@shared/schema";
 import type { CommitData } from "./lib/openai";
 import { z } from "zod";
 import 'dotenv/config'; // Top of your Node file (e.g., server.js or a Vite plugin)
+import multer from "multer";
+import fetch from "node-fetch";
+import FormData from "form-data";
 
 
 export async function registerRoutes(app: Express): Promise<Server> {
@@ -316,6 +319,61 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
     } catch (error) {
       res.status(500).json({ error: `Health check failed: ${error}` });
+    }
+  });
+
+  // Pinata image upload endpoint
+  const upload = multer({ storage: multer.memoryStorage() });
+  app.post("/api/pinata-upload", upload.single("file"), async (req: Request, res) => {
+    const pinataApiKey = process.env.PINATA_API_KEY;
+    const pinataSecretApiKey = process.env.PINATA_SECRET_API_KEY;
+
+    if (!pinataApiKey || !pinataSecretApiKey) {
+      return res.status(500).json({ error: "Pinata API keys are missing" });
+    }
+
+    try {
+      const file = (req as any).file;
+      if (!file) {
+        return res.status(400).json({ error: "No file provided" });
+      }
+
+      const pinataUrl = "https://api.pinata.cloud/pinning/pinFileToIPFS";
+      const formData = new FormData();
+      formData.append("file", file.buffer, {
+        filename: file.originalname,
+        contentType: file.mimetype,
+      });
+
+      const response = await fetch(pinataUrl, {
+        method: "POST",
+        headers: {
+          'pinata_api_key': pinataApiKey,
+          'pinata_secret_api_key': pinataSecretApiKey,
+          ...formData.getHeaders(),
+        },
+        body: formData,
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('Pinata upload failed:', errorText);
+        console.error('Pinata upload status:', response.status, response.statusText);
+        console.error('Pinata upload headers:', JSON.stringify(response.headers.raw ? response.headers.raw() : response.headers));
+        // Try to parse as JSON, else return as string
+        let errorJson;
+        try {
+          errorJson = JSON.parse(errorText);
+        } catch {
+          errorJson = { html: errorText };
+        }
+        return res.status(response.status).json({ error: "Failed to upload file to Pinata", details: errorJson, status: response.status, statusText: response.statusText });
+      }
+
+      const result = await response.json();
+      res.json(result);
+    } catch (error) {
+      res.status(500).json({ error: "Internal server error", details: error?.toString() });
     }
   });
 

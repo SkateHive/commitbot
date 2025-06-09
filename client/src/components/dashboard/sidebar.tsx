@@ -20,7 +20,9 @@ export default function Sidebar() {
             <i className="fas fa-robot text-white text-lg"></i>
           </div>
           <div>
-            <h1 className="text-lg font-semibold text-gray-900 dark:text-white">Skatehive DevBot</h1>
+            <h1 className="text-lg font-semibold text-gray-900 dark:text-white">
+              Skatehive DevBot
+            </h1>
             <p className="text-sm text-gray-500 dark:text-gray-400">v1.0.0</p>
           </div>
         </div>
@@ -31,15 +33,17 @@ export default function Sidebar() {
         {navItems.map((item) => {
           const isActive = location === item.href;
           return (
-            <Link key={item.href} href={item.href}>
-              <a className={`flex items-center space-x-3 px-3 py-2 rounded-lg transition-colors ${
-                isActive 
-                  ? 'bg-primary text-white' 
-                  : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
-              }`}>
-                <i className={`${item.icon} w-5`}></i>
-                <span>{item.label}</span>
-              </a>
+            <Link
+              key={item.href}
+              href={item.href}
+              className={`flex items-center space-x-3 px-3 py-2 rounded-lg transition-colors ${
+                isActive
+                  ? "bg-primary text-white"
+                  : "text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+              }`}
+            >
+              <i className={`${item.icon} w-5`}></i>
+              <span>{item.label}</span>
             </Link>
           );
         })}
@@ -52,8 +56,12 @@ export default function Sidebar() {
             <i className="fas fa-check text-green-600 dark:text-green-400 text-sm"></i>
           </div>
           <div className="flex-1">
-            <p className="text-sm font-medium text-gray-900 dark:text-white">Connected</p>
-            <p className="text-xs text-gray-500 dark:text-gray-400">Last sync: 2 min ago</p>
+            <p className="text-sm font-medium text-gray-900 dark:text-white">
+              Connected
+            </p>
+            <p className="text-xs text-gray-500 dark:text-gray-400">
+              Last sync: 2 min ago
+            </p>
           </div>
         </div>
       </div>
