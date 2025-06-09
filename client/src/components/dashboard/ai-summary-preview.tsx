@@ -1,6 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { useState } from "react";
 
 interface AISummaryPreviewProps {
   onPreview: () => void;
@@ -8,7 +9,7 @@ interface AISummaryPreviewProps {
 }
 
 export default function AISummaryPreview({ onPreview, isGenerating }: AISummaryPreviewProps) {
-  return (
+    return (
     <Card className="bg-white dark:bg-gray-800">
       <CardHeader>
         <div className="flex items-center justify-between">
@@ -62,6 +63,23 @@ export default function AISummaryPreview({ onPreview, isGenerating }: AISummaryP
                 </>
               )}
             </Button>
+            {/* <Button 
+              onClick={handleEnhanceContent}
+              className="flex-1"
+              disabled={isGenerating || isEnhancing}
+            >
+              {isEnhancing ? (
+                <>
+                  <i className="fas fa-spinner fa-spin mr-2"></i>
+                  Enhancing...
+                </>
+              ) : (
+                <>
+                  <i className="fas fa-magic mr-2"></i>
+                  Enhance Content
+                </>
+              )}
+            </Button> */}
           </div>
         </div>
       </CardContent>
